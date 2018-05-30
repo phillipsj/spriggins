@@ -1,5 +1,10 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using System;
+using System.IO;
+using System.Net;
+using System.Runtime.InteropServices;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace Spriggins {
     public class Program {
@@ -11,19 +16,27 @@ namespace Spriggins {
             app.HelpOption(inherited: true);
             app.VersionOption("-v|--version", "0.0.1");
 
-            var fileOption = app.Option("-f|--file <FILE>", "The manifest file to create the package.", CommandOptionType.MultipleValue);
+            var optionFile = app.Option("-f|--file <FILE>",
+                "The manifest file to create the package.",
+                CommandOptionType.MultipleValue);
 
             app.OnExecute(() => {
-                if (fileOption.HasValue()) {
-                    Console.WriteLine("Using the file passed...");
+                if (!optionFile.HasValue() && !File.Exists("manifest.yml")) {
+                    Console.Error.WriteLine(
+                        "No configuration file is found or has been provided. Please run the command again.");
+                    return 1;
                 }
-                else {
-                    Console.WriteLine("Using the default file...");
-                }
+
+                var manifest = new StringReader(optionFile.HasValue() ? optionFile.Value() : "manifest.yml");
+                var deserializer = new DeserializerBuilder()
+                    .WithNamingConvention(new CamelCaseNamingConvention())
+                    .Build();
+
+                var stuff = deserializer.Deserialize(manifest);
+                return 0;
             });
-            
+
             return app.Execute(args);
         }
-        
     }
 }
