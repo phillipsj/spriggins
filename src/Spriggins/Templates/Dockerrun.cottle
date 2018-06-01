@@ -1,0 +1,22 @@
+﻿{
+    "AWSEBDockerrunVersion": {DockerRunVersion},
+    "Image": {
+        "Name": "{Name}",
+        "Update": "{Update}"
+    },
+    "Ports": [
+        {
+            "ContainerPort": "{ContainerPort}"
+        }
+    ],
+    "Volumes": [
+        {
+            "HostDirectory": "{HostDirectory}",
+            "ContainerDirectory": "{ContainerDirectory}"
+        },
+        {
+            "HostDirectory": "{HostDirectory}",
+            "ContainerDirectory": "{ContainerDirectory}"
+        }
+    ]
+}

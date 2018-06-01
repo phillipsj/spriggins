@@ -1,10 +1,6 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using System;
 using System.IO;
-using System.Net;
-using System.Runtime.InteropServices;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 namespace Spriggins {
     public class Program {
@@ -27,12 +23,9 @@ namespace Spriggins {
                     return 1;
                 }
 
-                var manifest = new StringReader(optionFile.HasValue() ? optionFile.Value() : "manifest.yml");
-                var deserializer = new DeserializerBuilder()
-                    .WithNamingConvention(new CamelCaseNamingConvention())
-                    .Build();
-
-                var stuff = deserializer.Deserialize(manifest);
+                var file = optionFile.HasValue() ? optionFile.Value() : "manifest.yml";
+                var manifest = file.Parse();
+                
                 return 0;
             });
 
